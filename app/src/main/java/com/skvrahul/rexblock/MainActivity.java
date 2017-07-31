@@ -56,6 +56,27 @@ public class MainActivity extends AppCompatActivity {
                 removeRule(rule);
             }
         };
+        RulesAdapter.ActiveClickListener activeClickListener = new RulesAdapter.ActiveClickListener() {
+            @Override
+            public void onItemClick(Rule rule) {
+                View parentLayout = findViewById(R.id.rules_rv);
+                int i = rules.indexOf(rule);
+                rules.remove(rule);
+                if(rule.isActive()){
+                    rule.setActive(false);
+                    Snackbar sn = Snackbar.make(parentLayout,"This rule has been deactivated!",Snackbar.LENGTH_LONG);
+                    sn.show();
+
+                }else{
+                    rule.setActive(true);
+                    Snackbar sn = Snackbar.make(parentLayout,"This rule has been activated!",Snackbar.LENGTH_LONG);
+                    sn.show();
+                }
+                rules.add(i, rule);
+                updateRules();
+
+            }
+        };
         fetchRules();
 
         if(rules.size()==0){
@@ -63,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         }else{
             noRulesCV.setVisibility(View.GONE);
         }
-        adapter = new RulesAdapter(rules, deleteClickListener);
+        adapter = new RulesAdapter(rules, deleteClickListener, activeClickListener);
         rulesRV.setAdapter(adapter);
         rulesRV.setLayoutManager(new LinearLayoutManager(getBaseContext()));
         rulesRV.setItemAnimator(new DefaultItemAnimator());
@@ -173,6 +194,13 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.READ_PHONE_STATE},PERMISSION_CALLBACK);
         }
 
+    }
+    public void updateRules(){
+        realm.beginTransaction();
+        realm.where(Rule.class).findAll().deleteAllFromRealm();
+        realm.copyToRealm(rules);
+        realm.commitTransaction();
+        adapter.notifyDataSetChanged();
     }
     public void fetchRules(){
         RealmResults<Rule> rulesRealmResult = realm.where(Rule.class).findAll();

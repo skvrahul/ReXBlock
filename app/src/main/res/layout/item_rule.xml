@@ -21,19 +21,22 @@
                 android:id="@+id/regex_name_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="1.8"
                 android:text="Rule"
                 android:textSize="20dp"
                 />
-            <TextView
-                android:id="@+id/regex_rule_active_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Active"
-                android:textSize="16dp"
-                android:textColor="@color/green"
-                android:gravity="end"
+
+
+
+            <ImageView
+                android:id="@+id/regex_rule_active_image_view"
+                android:layout_height="24dp"
+                android:layout_width="24dp"
+                android:layout_weight="0.2"
+                android:src="@drawable/ic_check_green_24dp"
+                android:layout_gravity="end"
+                android:clickable="true"
+                android:tag="ACTIVE"
                 />
         </LinearLayout>
         <LinearLayout
